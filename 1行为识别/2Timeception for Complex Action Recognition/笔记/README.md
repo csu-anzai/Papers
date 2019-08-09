@@ -15,12 +15,16 @@ We provide the implementation for 3 different libraries: `keras`, `tensorflow` a
 
 > - **N-Group操作之后：**
 >
->     Concat ==> Relu ==> Shuffle ==>对时域的T进行下采样MaxPool
+>   Concat ==> Relu ==> Shuffle ==>对时域的T进行下采样MaxPool
 >
 > - **采用通道分组的原因：**
 >   优点：可以降低参数量，减少时间成本。
 >   缺点：每个分组都值包含通道之间的部分相关性，不利于通道之间的信息交互。
 >   处理办法：增加通道混洗和连接操作。通道混洗可以增加编码跨通道之间的相关性。因为每组通道都是所有通道的一个随机子集，都只包含部分的可能性。而这可以通过通道混洗和组合得到缓解
+>
+> - **在timeception-only前进行通道分组，后进行串联混洗：**
+>
+> 也处理了部分的空间信息，符合了第一个设计原则：子空间模块化（我认为既是：堆叠模块前后的一致性，为与ResNet/I3D串联堆叠提供理论基础。）
 
 ## 为了能够应对复杂动作多变的时间范围，采用多尺度替换固定尺度
 
@@ -78,13 +82,23 @@ tensor = module(input)
 print (tensor.size())
 ```
 
+## 实验
 
+### Tolerating Temporal Extents
 
+#### Original v.s. Altered Temporal Extents
 
+| 视频切割                                          | 实验结果                                          |
+| ------------------------------------------------- | ------------------------------------------------- |
+| ![1564802867266](README.assets/1564802867266.png) | ![1564802890338](README.assets/1564802890338.png) |
 
+#### Fixed-size vs. Multi-scale Temporal Kernels
 
+多核的有效性：
 
+![1564803002894](README.assets/1564803002894.png)
 
+> 作者在实验过程中发现多核的不同的kernel_size与不同的dilation rates在实验性能上的相差无几甚至没有改变。说明二者的作用相似。但是相对来说不同的dilation rates更节省参数量，即空洞卷积效果更佳。
 
 
 
