@@ -143,7 +143,7 @@ Visualization of the weights and matching activations for the first convolutions
 
 **Weights**
 
-![i3d_kinetics_rgb.gif](./README.assets/i3d_kinetics_rgb.gif)
+![i3d_kinetics_rgb.gif](.\README.assets\i3d_kinetics_rgb.gif)
 
 **Activations**
 
