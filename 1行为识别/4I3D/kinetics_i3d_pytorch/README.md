@@ -160,3 +160,12 @@ Visualization of the weights and matching activations for the first convolutions
 **Activations**
 
 ![flow_activations.gif](https://github.com/hassony2/kinetics_i3d_pytorch/blob/master/results/activations/activation-gifs/flow_activations.gif?raw=true)
+
+
+
+#   Problem
+
+## about extract features from my dataset
+
+hello, this is very common because they didn't push all code to this repo, you need to preprocess the video you want to implement by yourself. This link maybe help for you. https://scikit-image.org/docs/dev/user_guide/video.html  You should transfer the video to images by using ffmpeg then transfer the images to .npy.             
+

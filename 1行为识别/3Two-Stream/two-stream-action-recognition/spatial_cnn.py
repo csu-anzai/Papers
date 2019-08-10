@@ -33,7 +33,7 @@ parser.add_argument('--start-epoch', default=0, type=int, metavar='N', help='man
 def main():
     global arg
     arg = parser.parse_args()
-    print arg
+    print(arg)
 
     #Prepare DataLoader
     data_loader = dataloader.spatial_dataloader(
@@ -74,7 +74,7 @@ class Spatial_CNN():
         self.test_video=test_video
 
     def build_model(self):
-        print ('==> Build model and setup loss and optimizer')
+        print('==> Build model and setup loss and optimizer')
         #build model
         self.model = resnet101(pretrained= True, channel=3).cuda()
         #Loss function and optimizer
@@ -253,11 +253,6 @@ class Spatial_CNN():
             
         #print(' * Video level Prec@1 {top1:.3f}, Video level Prec@5 {top5:.3f}'.format(top1=top1, top5=top5))
         return top1,top5,loss.data.cpu().numpy()
-
-
-
-
-
 
 
 if __name__=='__main__':

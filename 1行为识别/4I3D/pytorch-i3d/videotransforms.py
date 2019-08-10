@@ -10,6 +10,7 @@ class RandomCrop(object):
             made.
     """
 
+    #定义输出视频的h，w大小
     def __init__(self, size):
         if isinstance(size, numbers.Number):
             self.size = (int(size), int(size))
