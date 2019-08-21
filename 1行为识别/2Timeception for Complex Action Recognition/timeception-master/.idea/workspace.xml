@@ -26,7 +26,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/experiments/train_pytorch.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1476">
+            <state relative-caret-position="-3156">
               <caret line="111" column="52" selection-start-line="111" selection-start-column="52" selection-end-line="111" selection-end-column="52" />
               <folding>
                 <element signature="e#1502#1540#0" expanded="true" />
@@ -35,11 +35,14 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/experiments/train_keras.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/nets/timeception_pytorch.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="738">
-              <caret line="41" selection-start-line="41" selection-end-line="41" />
+            <state relative-caret-position="476">
+              <caret line="334" column="62" selection-start-line="334" selection-start-column="62" selection-end-line="334" selection-end-column="62" />
+              <folding>
+                <element signature="e#970#1008#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -85,7 +88,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/core/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1188">
+            <state relative-caret-position="1620">
               <caret line="90" selection-start-line="90" selection-end-line="90" />
               <folding>
                 <element signature="e#988#1026#0" expanded="true" />
@@ -94,11 +97,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main_keras.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="207">
-              <caret line="24" column="3" lean-forward="true" selection-start-line="24" selection-start-column="3" selection-end-line="24" selection-end-column="3" />
+            <state relative-caret-position="236">
+              <caret line="24" column="3" selection-start-line="24" selection-start-column="3" selection-end-line="24" selection-end-column="3" />
             </state>
           </provider>
         </entry>
@@ -165,7 +168,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-4" />
     <option name="width" value="1929" />
     <option name="height" value="1047" />
@@ -176,7 +179,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -237,6 +239,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -412,11 +415,12 @@
       <workItem from="1564910985578" duration="32293000" />
       <workItem from="1564996777034" duration="15872000" />
       <workItem from="1565402041230" duration="687000" />
+      <workItem from="1565441344147" duration="2392000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="125013000" />
+    <option name="totallyTimeSpent" value="127405000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -428,11 +432,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <layout>
       <window_info id="Favorites" order="0" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.1748401" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.17643923" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info id="Remote Host" order="3" weight="0.15031983" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
@@ -441,12 +444,12 @@
       <window_info anchor="bottom" id="Event Log" order="3" sideWeight="0.5033686" side_tool="true" weight="0.2822757" />
       <window_info anchor="bottom" id="Message" order="4" />
       <window_info anchor="bottom" id="Find" order="5" />
-      <window_info anchor="bottom" id="Python Console" order="6" sideWeight="0.45469084" visible="true" weight="0.25917685" />
+      <window_info anchor="bottom" id="Python Console" order="6" sideWeight="0.45415777" visible="true" weight="0.2580645" />
       <window_info anchor="bottom" id="Debug" order="7" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="9" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="10" sideWeight="0.49946696" weight="0.32936078" />
-      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.5453092" side_tool="true" visible="true" weight="0.25917685" />
+      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.54584223" side_tool="true" visible="true" weight="0.2580645" />
       <window_info anchor="bottom" id="Jupyter" order="12" sideWeight="0.49840087" weight="0.32932165" />
       <window_info anchor="right" id="Database" order="0" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="1" type="SLIDING" weight="0.4" />
@@ -494,7 +497,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/nets/timeception.py" />
     <entry file="file://$PROJECT_DIR$/data/assets/timeception_layer.jpg">
       <provider selected="true" editor-type-id="images" />
     </entry>
@@ -518,16 +520,6 @@
           <caret line="100" column="39" selection-start-line="100" selection-start-column="39" selection-end-line="100" selection-end-column="39" />
           <folding>
             <element signature="e#947#985#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nets/timeception_pytorch.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3708">
-          <caret line="222" column="11" selection-start-line="222" selection-start-column="11" selection-end-line="222" selection-end-column="11" />
-          <folding>
-            <element signature="e#970#1008#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -642,20 +634,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/experiments/train_pytorch.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1476">
-          <caret line="111" column="52" selection-start-line="111" selection-start-column="52" selection-end-line="111" selection-end-column="52" />
-          <folding>
-            <element signature="e#1502#1540#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/experiments/train_keras.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="738">
           <caret line="41" selection-start-line="41" selection-end-line="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/datasets/charades.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#1518#1556#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -682,19 +673,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/core/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1188">
+        <state relative-caret-position="1620">
           <caret line="90" selection-start-line="90" selection-end-line="90" />
           <folding>
             <element signature="e#988#1026#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/datasets/charades.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#1518#1556#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -708,8 +690,31 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main_keras.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="24" column="3" lean-forward="true" selection-start-line="24" selection-start-column="3" selection-end-line="24" selection-end-column="3" />
+        <state relative-caret-position="236">
+          <caret line="24" column="3" selection-start-line="24" selection-start-column="3" selection-end-line="24" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/experiments/train_pytorch.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3156">
+          <caret line="111" column="52" selection-start-line="111" selection-start-column="52" selection-end-line="111" selection-end-column="52" />
+          <folding>
+            <element signature="e#1502#1540#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nets/timeception.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nets/timeception_pytorch.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="334" column="62" selection-start-line="334" selection-start-column="62" selection-end-line="334" selection-end-column="62" />
+          <folding>
+            <element signature="e#970#1008#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

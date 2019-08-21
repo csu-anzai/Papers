@@ -27,7 +27,7 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/charades/charades.json">
               <provider selected="true" editor-type-id="text-editor">
                 <state>
@@ -36,11 +36,11 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/train_i3d.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="282">
-                  <caret line="41" column="18" selection-start-line="41" selection-start-column="18" selection-end-line="41" selection-end-column="18" />
+                <state relative-caret-position="162">
+                  <caret line="9" column="56" selection-start-line="9" selection-start-column="56" selection-end-line="9" selection-end-column="56" />
                 </state>
               </provider>
             </entry>
@@ -48,7 +48,7 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/1179558797/1682843110/torch/utils/data/dataloader.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="810">
+                <state relative-caret-position="3060">
                   <caret line="175" selection-start-line="175" selection-end-line="175" />
                 </state>
               </provider>
@@ -57,8 +57,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/extract_features.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="162">
-                  <caret line="32" column="16" lean-forward="true" selection-start-line="32" selection-start-column="16" selection-end-line="32" selection-end-column="16" />
+                <state relative-caret-position="576">
+                  <caret line="32" column="16" selection-start-line="32" selection-start-column="16" selection-end-line="32" selection-end-column="16" />
                 </state>
               </provider>
             </entry>
@@ -66,7 +66,7 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/videotransforms.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="360">
+                <state relative-caret-position="810">
                   <caret line="47" column="12" selection-start-line="47" selection-start-column="12" selection-end-line="47" selection-end-column="12" />
                   <folding>
                     <element signature="e#0#18#0" expanded="true" />
@@ -87,7 +87,7 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/pytorch_i3d.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1350">
+                <state relative-caret-position="1188">
                   <caret line="75" column="34" selection-start-line="75" selection-start-column="34" selection-end-line="75" selection-end-column="34" />
                   <folding>
                     <element signature="e#0#12#0" expanded="true" />
@@ -99,7 +99,7 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/charades_dataset_full.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1260">
+                <state relative-caret-position="1044">
                   <caret line="70" column="52" selection-start-line="70" selection-start-column="52" selection-end-line="70" selection-end-column="52" />
                   <folding>
                     <element signature="e#0#12#0" expanded="true" />
@@ -120,15 +120,12 @@
         </leaf>
       </split-first>
       <split-second>
-        <leaf>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/charades_dataset.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="450">
+                <state relative-caret-position="360">
                   <caret line="84" column="33" selection-start-line="84" selection-start-column="33" selection-end-line="84" selection-end-column="33" />
-                  <folding>
-                    <element signature="e#0#12#0" expanded="true" />
-                  </folding>
                 </state>
               </provider>
             </entry>
@@ -165,8 +162,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-4" />
-    <option name="width" value="1929" />
+    <option name="x" value="741" />
+    <option name="width" value="1138" />
     <option name="height" value="1047" />
   </component>
   <component name="ProjectView">
@@ -205,7 +202,7 @@
     <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../Awesome-NAS/1DARTS-Differentiable Architecture Search/code" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="Errors" />
@@ -312,7 +309,9 @@
       <workItem from="1565231695499" duration="557000" />
       <workItem from="1565266851954" duration="3196000" />
       <workItem from="1565272859659" duration="3236000" />
-      <workItem from="1565402223369" duration="2070000" />
+      <workItem from="1565402223369" duration="3853000" />
+      <workItem from="1566355688091" duration="1871000" />
+      <workItem from="1566362551820" duration="1855000" />
     </task>
     <task id="LOCAL-00001" summary="1">
       <created>1565099139339</created>
@@ -332,7 +331,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="31351000" />
+    <option name="totallyTimeSpent" value="36860000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -348,7 +347,7 @@
     <layout>
       <window_info id="File Transfer" order="0" sideWeight="0.50278085" side_tool="true" visible="true" weight="0.13113007" />
       <window_info id="Favorites" order="1" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="2" sideWeight="0.49721915" visible="true" weight="0.13113007" />
+      <window_info content_ui="combo" id="Project" order="2" sideWeight="0.49721915" visible="true" weight="0.10607676" />
       <window_info id="Structure" order="3" side_tool="true" weight="0.25" />
       <window_info id="Remote Host" order="4" weight="0.32995737" />
       <window_info anchor="bottom" id="调试" order="0" />
@@ -367,7 +366,7 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="2" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="3" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="4" weight="0.25" />
-      <window_info anchor="right" id="Run" order="5" sideWeight="0.5717464" weight="0.32782516" />
+      <window_info anchor="right" id="Run" order="5" sideWeight="0.5717464" weight="0.23614073" />
       <window_info anchor="right" id="Python Console" order="6" sideWeight="0.42825362" side_tool="true" weight="0.37100214" />
       <window_info anchor="right" id="Terminal" order="7" sideWeight="0.42714128" side_tool="true" weight="0.37100214" />
     </layout>
@@ -382,7 +381,7 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/pytorch_i3d$extract_features.coverage" NAME="extract_features Coverage Results" MODIFIED="1565229018922" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/pytorch_i3d$charades_dataset.coverage" NAME="charades_dataset Coverage Results" MODIFIED="1565099371220" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/pytorch_i3d$train_i3d.coverage" NAME="train_i3d Coverage Results" MODIFIED="1565321651661" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/pytorch_i3d$train_i3d.coverage" NAME="train_i3d Coverage Results" MODIFIED="1566362886108" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/1227394127/1377713281/posixpath.py">
@@ -448,6 +447,37 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/charades/charades.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="60" selection-start-column="53" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/1179558797/1682843110/torch/utils/data/dataloader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3060">
+          <caret line="175" selection-start-line="175" selection-end-line="175" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/extract_features.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="576">
+          <caret line="32" column="16" selection-start-line="32" selection-start-column="16" selection-end-line="32" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/videotransforms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="810">
+          <caret line="47" column="12" selection-start-line="47" selection-start-column="12" selection-end-line="47" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/arg_parse.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="162">
@@ -457,7 +487,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pytorch_i3d.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1350">
+        <state relative-caret-position="1188">
           <caret line="75" column="34" selection-start-line="75" selection-start-column="34" selection-end-line="75" selection-end-column="34" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
@@ -467,7 +497,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/charades_dataset_full.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1260">
+        <state relative-caret-position="1044">
           <caret line="70" column="52" selection-start-line="70" selection-start-column="52" selection-end-line="70" selection-end-column="52" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
@@ -482,37 +512,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/videotransforms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="47" column="12" selection-start-line="47" selection-start-column="12" selection-end-line="47" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.PyCharm2019.1/system/remote_sources/1179558797/1682843110/torch/utils/data/dataloader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="810">
-          <caret line="175" selection-start-line="175" selection-end-line="175" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/train_i3d.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="282">
-          <caret line="41" column="18" selection-start-line="41" selection-start-column="18" selection-end-line="41" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/extract_features.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="32" column="16" lean-forward="true" selection-start-line="32" selection-start-column="16" selection-end-line="32" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/charades_dataset.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="216">
@@ -520,10 +519,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/charades/charades.json">
+    <entry file="file://$PROJECT_DIR$/train_i3d.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="60" selection-start-column="53" selection-end-column="60" />
+        <state relative-caret-position="162">
+          <caret line="9" column="56" selection-start-line="9" selection-start-column="56" selection-end-line="9" selection-end-column="56" />
         </state>
       </provider>
     </entry>
