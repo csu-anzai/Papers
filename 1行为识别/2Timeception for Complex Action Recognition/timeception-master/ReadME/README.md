@@ -143,108 +143,19 @@ print (tensor.size())
   - `for n_frames_in in（1024,512,256）`
   - `for n_frames_out in（128,64,32）`
 
-- 
+# 训练，测试
 
-# 代码线性测试
+直接运行`main_pytorch.py`,注意修改配置文件即可。
 
-```python 
-default_config_file = 'charades_i3d_tc2_f256.yaml'
-config_file=default_config_file
-config_path = './configs/%s' % (config_file)
-config_path
-Out[5]: './configs/charades_i3d_tc2_f256.yaml'
-file_path = config_path
-from core import utils
-yaml_config = utils.yaml_load(file_path)
-from core.config import __C
-from core.config_utils import cfg_merge_dicts
-cfg_merge_dicts(yaml_config, __C)
-training_scheme = 'tco'
-from core import config
-n_epochs = config.cfg.TRAIN.N_EPOCHS #500
-dataset_name = config.cfg.DATASET_NAME #charades
-model_name = '%s_%s' % (config.cfg.MODEL.NAME, utils.timestamp()) #'charades_timeception_19.08.05-10:59:25'
-device = 'cuda'
-```
-```python
-config.cfg
-Out[28]: 
-{'DATASET_NAME': 'charades',
- 'DEBUG': False,
- 'LOG_PERIOD': 10,
- 'MODEL': {'BACKBONE_CNN': 'i3d_pytorch_charades_rgb',
-  'BACKBONE_FEATURE': 'mixed_5c',
-  'CLASSIFICATION_TYPE': 'ml',
-  'MULTISCALE_TYPE': 'ks',
-  'NAME': 'charades_timeception',
-  'N_CHAMNNEL_GROUPS': 8,
-  'N_CLASSES': 157,
-  'N_INPUT_TIMESTEPS': 256,
-  'N_TC_LAYERS': 2,
-  'N_TC_TIMESTEPS': 32},
- 'NUM_GPUS': 1,
- 'SOLVER': {'ADAM_EPSILON': 0.0001,
-  'LR': 0.01,
-  'NAME': 'adam',
-  'SGD_MOMENTUM': 0.9,
-  'SGD_NESTEROV': True,
-  'SGD_WEIGHT_DECAY': 0.0001},
- 'TEST': {'BATCH_SIZE': 64, 'N_SAMPLES': 10},
- 'TRAIN': {'BATCH_SIZE': 32,
-  'N_EPOCHS': 500,
-  'N_WORKERS': 10,
-  'SCHEME': 'tco'}}
-```
-```python
-is_training=True
-n_classes = config.cfg.MODEL.N_CLASSES #157
-dataset_name = config.cfg.DATASET_NAME #charades
-backbone_model_name = config.cfg.MODEL.BACKBONE_CNN #i3d_pytorch_charades_rgb
-backbone_feature_name = config.cfg.MODEL.BACKBONE_FEATURE #mixed_5c
-n_timesteps = config.cfg.MODEL.N_TC_TIMESTEPS #32
-n_workers = config.cfg.TRAIN.N_WORKERS #读取数据的线程数
-batch_size_tr = config.cfg.TRAIN.BATCH_SIZE #32
-batch_size_te = config.cfg.TEST.BATCH_SIZE #64
-batch_size = batch_size_tr if is_training else batch_size_te
-feature_name = 'features_%s_%s_%sf' % (backbone_model_name, backbone_feature_name, n_timesteps) #'features_i3d_pytorch_charades_rgb_mixed_5c_32f'
-c, h, w = utils.get_model_feat_maps_info(backbone_model_name, backbone_feature_name)
-#features_i3d_pytorch_charades_rgb,mixed_5c,||获得模型对应的feature_map的大小细节：c,h,w = 1024, 7, 7
-feature_dim = (c, n_timesteps, h, w)
-params = {'batch_size': batch_size, 'n_classes': n_classes, 'feature_name': feature_name, 'feature_dim': feature_dim, 'is_training': is_training}
-dataset_class = data_utils_pytorch.PYTORCH_DATASETS_DICT[dataset_name] #core.data_utils_pytorch.DatasetCharades
-from core import utils, pytorch_utils, image_utils, config_utils, const, config, data_utils_pytorch, metrics
-root_path = './data/charades'
-annotation_path = '%s/annotation/video_annotation.pkl' % (root_path)
-(video_names, y, _, _) = utils.pkl_load(annotation_path) #video_names [b'001YG' b'004QE' b'00HFP' ... b'ZZDBH' b'ZZN85' b'ZZXQF'],y.shape=(7811, 157)
-# (_, _, video_names, y) = utils.pkl_load(annotation_path) #y.shape = (1814,157)
-import numpy as np
-y = y.astype(np.float32) #每个视频可以属于多个类别
-n_batches = utils.calc_num_batches(n_samples, batch_size)
-dataset_class = data_utils_pytorch.PYTORCH_DATASETS_DICT[dataset_name] #core.data_utils_pytorch.DatasetCharades
-dataset = dataset_class(**params)
-n_samples = dataset.n_samples #7811 1814
-n_batches = dataset.n_batches #245 37
-from torch.utils.data import DataLoader
-data_loader = DataLoader(dataset, batch_size=batch_size, num_workers=n_workers, shuffle=True)
-from experiments.train_pytorch import __define_loader
-loader_tr, n_samples_tr, n_batches_tr = __define_loader(is_training=True)
-loader_te, n_samples_te, n_batches_te = __define_loader(is_training=False)
-import logging
-logger = logging.getLogger(__name__)
-import datetime
-logger.info('--- start time')
-logger.info(datetime.datetime.now())
-logger.info('... [tr]: n_samples, n_batch, batch_size: %d, %d, %d' % (n_samples_tr, n_batches_tr, config.cfg.TRAIN.BATCH_SIZE))
-logger.info('... [te]: n_samples, n_batch, batch_size: %d, %d, %d' % (n_samples_te, n_batches_te, config.cfg.TEST.BATCH_SIZE))
-device = 'cuda'
-from experiments.train_pytorch import __define_timeception_model
-model, optimizer, loss_fn, metric_fn, metric_fn_name = __define_timeception_model(device)
+- `charades_i3d_tc2_f256.yaml`
+- `charades_i3d_tc3_f512.yaml`
+- `charades_i3d_tc4_f1024.yaml`
 
 
 
 
 
-```
+
 
 
 

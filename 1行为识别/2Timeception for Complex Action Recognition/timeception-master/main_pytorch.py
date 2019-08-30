@@ -29,7 +29,7 @@ def __main():
     from experiments import train_pytorch, test_pytorch
 
     # or using pytorch
-    train_pytorch.__main()
+    train_pytorch.__main(default_config_file = 'charades_i3d_tc2_f256.yaml')
 
 
     # or using pytorch

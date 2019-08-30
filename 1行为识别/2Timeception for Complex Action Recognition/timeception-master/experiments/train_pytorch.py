@@ -101,12 +101,10 @@ def train_tco():
 
         epoch_num = idx_epoch + 1
         # print(epoch_num)
-
         loss_tr = 0.0
         acc_tr = 0.0
         loss_te = 0.0
         acc_te = 0.0
-
         tt1 = time.time()
 
         # flag model as training
@@ -304,12 +302,11 @@ class Model(Module):
 
         return tensor
 
-def __main():
+def __main(default_config_file):
     """
     Run this script to train Timeception.
     """
 
-    default_config_file = 'charades_i3d_tc2_f256.yaml' #网络的配置文件,2层的tc
     # Parse the arguments
     parser = OptionParser() #创建OptionParser对象，用于设置参数配置文件
     #使用parser.add_option(...)待定义命令行参数，及其帮助文档
