@@ -2,7 +2,7 @@
 
 NUM_GPUS: 1 # how many gups to use
 LOG_PERIOD: 10 # log period
-DATASET_NAME: 'charades' # name of dataset
+DATASET_NAME: 'Charades' # name of dataset
 
 MODEL:
   CLASSIFICATION_TYPE: 'ml' # either multi-label 'ml' or single-label 'sl'

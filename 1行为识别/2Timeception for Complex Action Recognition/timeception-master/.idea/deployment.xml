@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="ren_Server_Ubuntu">
+  <component name="PublishConfigData" autoUpload="Always">
     <serverData>
-      <paths name="ren_Server_Ubuntu">
+      <paths name="r_Server_Ubuntu">
         <serverdata>
           <mappings>
-            <mapping deploy="PyTorch/Timeception" local="$PROJECT_DIR$" />
+            <mapping deploy="/PyTorch/timeception-master" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

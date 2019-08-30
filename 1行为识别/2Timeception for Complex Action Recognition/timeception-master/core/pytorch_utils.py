@@ -250,12 +250,12 @@ def summary(model, input_size, batch_size=-1, device="cuda"):
 
 class ModelSaver():
     def __init__(self, model, dataset_name, model_name):
+        # model_saver = pytorch_utils.ModelSaver(model, dataset_name, model_name)
         self.model = model
         self.model_name = model_name
 
-        model_root_path = './data/%s/models' % (dataset_name)
-        print(model_root_path)
-        assert os.path.exists(model_root_path)
+        # model_root_path = './data/%s/models' % (dataset_name) #'./data/charades/models'
+        # assert os.path.exists(model_root_path)
 
         model_root_path = './data/%s/models/%s' % (dataset_name, model_name)
         if not os.path.exists(model_root_path):
@@ -269,9 +269,9 @@ class ModelSaver():
         """
         epoch_num = idx_epoch + 1
         model_root_path = self.model_root_path
-        model_state_path = str('%s/%03d.pt' % (model_root_path, epoch_num))
+        model_state_path = str('%s/%03d.pt' % (model_root_path, epoch_num)) #某个state状态下的模型参数保存路径
 
-        # save model state using pytorch
+        # save model state using pytorch,保存模型状态
         model_state = self.model.state_dict()
         torch.save(model_state, model_state_path)
 

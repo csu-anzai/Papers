@@ -186,8 +186,8 @@ class InceptionI3d(nn.Module):
         'Predictions',
     )
 
-    def __init__(self, num_classes=400, spatial_squeeze=True,
-                 final_endpoint='Logits', name='inception_i3d', in_channels=3, dropout_keep_prob=0.5):
+    def __init__(self, num_classes=400, spatial_squeeze=True, final_endpoint='Logits',
+                 name='inception_i3d', in_channels=3, dropout_keep_prob=0.5):
         """Initializes I3D model instance.
         Args:
           num_classes: The number of outputs in the logit layer (default 400, which
@@ -332,7 +332,12 @@ class InceptionI3d(nn.Module):
         
 
     def extract_features(self, x):
+        #使用I3D模型提取特征
         for end_point in self.VALID_ENDPOINTS:
             if end_point in self.end_points:
                 x = self._modules[end_point](x)
-        return self.avg_pool(x)
+        return x
+        # torch.Size([1, 1024, 128, 7, 7])
+        # return self.avg_pool(x)
+        # 原版 1 x 128 x 1 x 1 x 1024.
+

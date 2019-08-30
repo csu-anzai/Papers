@@ -159,40 +159,40 @@ class DatasetCharades(torch.utils.data.Dataset):
         Initialization
         """
 
-        self.batch_size = batch_size
-        self.is_training = is_training
-        self.n_classes = n_classes
-        self.feature_dim = feature_dim
-        self.feature_name = feature_name
+        self.batch_size = batch_size #32
+        self.is_training = is_training #True
+        self.n_classes = n_classes #157
+        self.feature_dim = feature_dim #(1024, 32, 7, 7)
+        self.feature_name = feature_name #'features_i3d_pytorch_charades_rgb_mixed_5c_32f'
         self.is_shuffle = is_shuffle
-        self.dataset_name = 'charades'
+        self.dataset_name = 'Charades'
 
         # load annotation
-        root_path = './data/charades'
-        annotation_path = '%s/annotation/video_annotation.pkl' % (root_path) #./data/charades/annotation/video_annotation.pkl
+        root_path = './data/Charades'
+        annotation_path = '%s/annotation/video_annotation.pkl' % (root_path) #视频注释./data/Charades/annotation/video_annotation.pkl
 
         if self.is_training:
-            (video_names, y, _, _) = utils.pkl_load(annotation_path) #video_names [b'001YG' b'004QE' b'00HFP' ... b'ZZDBH' b'ZZN85' b'ZZXQF']
+            (video_names, y, _, _) = utils.pkl_load(annotation_path) #video_names [b'001YG' b'004QE' b'00HFP' ... b'ZZDBH' b'ZZN85' b'ZZXQF'],y.shape=(7811, 157)
         else:
-            (_, _, video_names, y) = utils.pkl_load(annotation_path)
+            (_, _, video_names, y) = utils.pkl_load(annotation_path) #y.shape = (1814,157)
 
-        # in case of single label classification, debinarize the labels
+        # in case of single label classification, debinarize the labels,单标签
         if config.cfg.MODEL.CLASSIFICATION_TYPE == 'sl':
             y = utils.debinarize_label(y)
 
         # in any case, make sure target is float
         y = y.astype(np.float32)
 
-        # convert relative to root pathes
-        feats_path = np.array(['%s/%s/%s.pkl' % (root_path, feature_name, p) for p in video_names]) #'./data/charades/features_i3d_pytorch_charades_rgb_mixed_5c_32f/'
+        # convert relative to root pathes,通过I3D进行特征提取的特征存放的路径
+        feats_path = np.array(['%s/%s/%s.pkl' % (root_path, feature_name, p.astype(str)) for p in video_names]) #原版的。#'./data/Charades/features_i3d_pytorch_charades_rgb_mixed_5c_32f/'
 
         n_samples = len(y)
         self.n_samples = n_samples
-        self.n_batches = utils.calc_num_batches(n_samples, batch_size)
-        self.feats_path = feats_path
+        self.n_batches = utils.calc_num_batches(n_samples, batch_size) #计算batch的个数
+        self.feats_path = feats_path #特征存放的路径
         self.y = y
 
-        # shuffle the data
+        # shuffle the data，打乱顺序
         if self.is_shuffle:
             self.__shuffle()
 
@@ -203,10 +203,10 @@ class DatasetCharades(torch.utils.data.Dataset):
 
         y = self.y[index]
         p = self.feats_path[index]
-        x = utils.pkl_load(p)  # (T, H, W, C)
+        x = utils.pkl_load(p)  # x.shape=(T, H, W, C)
 
         # convert to channel last
-        x = np.transpose(x, (3, 0, 1, 2))  # (T, H, W, C)
+        x = np.transpose(x, (3, 0, 1, 2))  # x.shape=(C, T, H, W)
 
         return x, y
 
@@ -224,6 +224,5 @@ class DatasetCharades(torch.utils.data.Dataset):
 
 # region Constants
 
-PYTORCH_DATASETS_DICT = {'charades': DatasetCharades} #dataset_class = data_utils.PYTORCH_DATASETS_DICT[dataset_name],dataset_name=charades
-
+PYTORCH_DATASETS_DICT = {'Charades': DatasetCharades} #dataset_class = data_utils.PYTORCH_DATASETS_DICT[charades]
 # endregion

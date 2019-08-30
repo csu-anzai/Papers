@@ -64,8 +64,7 @@ if __name__ == "__main__":
     i3d_tf_to_pt.py first)')
 
     # RGB arguments
-    parser.add_argument(
-        '--rgb', action='store_true', help='Evaluate RGB pretrained network')
+    parser.add_argument('--rgb', action='store_true', help='Evaluate RGB pretrained network')
     parser.add_argument('--rgb_weights_path',type=str,
                         default='model/model_rgb.pth',
                         help='Path to rgb model state_dict')

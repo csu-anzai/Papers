@@ -141,6 +141,8 @@ def cfg_print_cfg():
     logger.info(pprint.pformat(__C))
 
 def cfg_merge_dicts(dict_a, dict_b):
+    #将dict_a中有的value值赋给dict_b中对应的key值，即以dict_a为准，对dict_b进行修改，而dict_a保持不变
+    #cfg_merge_dicts(yaml_config, __C)
     from ast import literal_eval
 
     for key, value in dict_a.items():
@@ -170,19 +172,20 @@ def cfg_merge_dicts(dict_a, dict_b):
             dict_b[key] = value
 
 def cfg_from_file(file_path, is_check=True):
+    # config_utils.cfg_from_file(config_path)
+    # config_path : './configs/charades_i3d_tc2_f256.yaml'
     """
     Load a config file and merge it into the default options.
     """
 
-    # read from file
-    yaml_config = utils.yaml_load(file_path)
+    # read from file，读取配置信息.yaml
+    yaml_config = utils.yaml_load(file_path) #字典数据类型
     #{'SOLVER': {'SGD_WEIGHT_DECAY': 0.0001, 'NAME': 'adam', 'SGD_NESTEROV': True, 'ADAM_EPSILON': 0.0001, 'SGD_MOMENTUM': 0.9, 'LR': 0.01}, 'LOG_PERIOD': 10, 'NUM_GPUS': 1, 'TRAIN': {'BATCH_SIZE': 32, 'N_EPOCHS': 500, 'N_WORKERS': 10, 'SCHEME': 'tco'}, 'MODEL': {'BACKBONE_CNN': 'i3d_pytorch_charades_rgb', 'N_CHAMNNEL_GROUPS': 8, 'N_CLASSES': 157, 'BACKBONE_FEATURE': 'mixed_5c', 'CLASSIFICATION_TYPE': 'ml', 'N_TC_TIMESTEPS': 32, 'N_INPUT_TIMESTEPS': 256, 'NAME': 'charades_timeception', 'MULTISCALE_TYPE': 'ks', 'N_TC_LAYERS': 2}, 'DATASET_NAME': 'charades', 'TEST': {'BATCH_SIZE': 64, 'N_SAMPLES': 10}}
 
-    # merge to project config
+    # merge to project config，合并配置文件的信息，将yaml_config中的value赋给__C,yaml_config中的信息保持不变
     cfg_merge_dicts(yaml_config, __C)
-    # print('cfg_merge_dicts(yaml_config, __C)',cfg_merge_dicts(yaml_config, __C))
 
-    # make sure everything is okay
+    # make sure everything is okay，确保所有的参数是正常的
     if is_check:
         cfg_sanity_check()
 

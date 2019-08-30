@@ -69,14 +69,15 @@ def train_tco():
 
     # get some configs for the training
     n_epochs = config.cfg.TRAIN.N_EPOCHS #500
-    dataset_name = config.cfg.DATASET_NAME #charades
+    dataset_name = config.cfg.DATASET_NAME #Charades
     model_name = '%s_%s' % (config.cfg.MODEL.NAME, utils.timestamp()) #'charades_timeception_19.08.05-10:59:25'
     device = 'cuda'
 
 
-    # data generators
+    # data generators 生成数据集
     loader_tr, n_samples_tr, n_batches_tr = __define_loader(is_training=True) #<torch.utils.data.dataloader.DataLoader object at 0x7f70a6145f98>，n_samples_tr = 7811，n_batches_tr=245
     loader_te, n_samples_te, n_batches_te = __define_loader(is_training=False)
+    #n_samples_te=1814,n_batches_te=37
 
     logger.info('--- start time')
     logger.info(datetime.datetime.now())
@@ -84,12 +85,13 @@ def train_tco():
     logger.info('... [te]: n_samples, n_batch, batch_size: %d, %d, %d' % (n_samples_te, n_batches_te, config.cfg.TEST.BATCH_SIZE))
 
 
-    # load model，这里进行加载模型
+    # load model，这里进行加载已经构建好的模型框架
     model, optimizer, loss_fn, metric_fn, metric_fn_name = __define_timeception_model(device)
 
+    print('batch_size=2, input_shape[1:]=', model._input_shape[1:])
     logger.info(pytorch_utils.summary(model, model._input_shape[1:], batch_size=2, device='cuda'))#打印模型摘要
 
-    # save the model
+    # save the model，保存模型状态
     model_saver = pytorch_utils.ModelSaver(model, dataset_name, model_name)
 
 
@@ -109,15 +111,12 @@ def train_tco():
 
         # flag model as training
         model.train() #将模型设置为训练阶段
-        # print('loader_tr',loader_tr.batch_sampler)
 
         # training
         for idx_batch, (x, y_true) in enumerate(loader_tr):
-            print(idx_batch)
-
             batch_num = idx_batch + 1
 
-            x, y_true = x.to(device), y_true.to(device)
+            x, y_true = x.to(device), y_true.to(device) #x.shape=(32*1024*32*7*7),即（batch*channels*T*h*w）
             optimizer.zero_grad()
             y_pred = model(x)
             loss = loss_fn(y_pred, y_true)
@@ -188,26 +187,27 @@ def __define_loader(is_training):
     Define data loader.
     """
 
-    # get some configs for the training
-    n_classes = config.cfg.MODEL.N_CLASSES
+    # get some configs for the training，配置数据加载的参数
+    n_classes = config.cfg.MODEL.N_CLASSES #157
     dataset_name = config.cfg.DATASET_NAME #charades
     backbone_model_name = config.cfg.MODEL.BACKBONE_CNN #i3d_pytorch_charades_rgb
     backbone_feature_name = config.cfg.MODEL.BACKBONE_FEATURE #mixed_5c
     n_timesteps = config.cfg.MODEL.N_TC_TIMESTEPS #32
-    n_workers = config.cfg.TRAIN.N_WORKERS
+    n_workers = config.cfg.TRAIN.N_WORKERS #读取数据的线程数
 
-    batch_size_tr = config.cfg.TRAIN.BATCH_SIZE
-    batch_size_te = config.cfg.TEST.BATCH_SIZE
+    batch_size_tr = config.cfg.TRAIN.BATCH_SIZE #32
+    batch_size_te = config.cfg.TEST.BATCH_SIZE #64
     batch_size = batch_size_tr if is_training else batch_size_te
 
     # size and name of feature
-    feature_name = 'features_%s_%s_%sf' % (backbone_model_name, backbone_feature_name, n_timesteps) #'features_i3d_pytorch_charades_rgb_mixed_5c_32f'
-    c, h, w = utils.get_model_feat_maps_info(backbone_model_name, backbone_feature_name) #1024, 7, 7
-    feature_dim = (c, n_timesteps, h, w) #1024, 32, 7, 7
+    feature_name = 'features_%s_%s_%sf' % (backbone_model_name, backbone_feature_name, n_timesteps) #'features _i3d_pytorch_charades_rgb_ mixed_5c_32f'
+    c, h, w = utils.get_model_feat_maps_info(backbone_model_name, backbone_feature_name)
+#features_i3d_pytorch_charades_rgb,mixed_5c,||获得模型对应的feature_map的大小细节：c,h,w = 1024, 7, 7
+    feature_dim = (c, n_timesteps, h, w) #特征的维度：1024, 32, 7, 7，其中的n_timesteps是自己设定的
 
     # data generators
     params = {'batch_size': batch_size, 'n_classes': n_classes, 'feature_name': feature_name, 'feature_dim': feature_dim, 'is_training': is_training}
-    dataset_class = data_utils_pytorch.PYTORCH_DATASETS_DICT[dataset_name]
+    dataset_class = data_utils_pytorch.PYTORCH_DATASETS_DICT[dataset_name] #core.data_utils_pytorch.DatasetCharades
     dataset = dataset_class(**params)
     n_samples = dataset.n_samples #7811 1814
     n_batches = dataset.n_batches #245 37
@@ -221,10 +221,10 @@ def __define_timeception_model(device):
     Define model, optimizer, loss function and metric function.
     """
     # some configurations一些参数配置
-    classification_type = config.cfg.MODEL.CLASSIFICATION_TYPE
-    solver_name = config.cfg.SOLVER.NAME
-    solver_lr = config.cfg.SOLVER.LR
-    adam_epsilon = config.cfg.SOLVER.ADAM_EPSILON
+    classification_type = config.cfg.MODEL.CLASSIFICATION_TYPE #'ml'
+    solver_name = config.cfg.SOLVER.NAME #'adam'
+    solver_lr = config.cfg.SOLVER.LR #0.01
+    adam_epsilon = config.cfg.SOLVER.ADAM_EPSILON #0.0001
 
     # define model
     model = Model().to(device)
@@ -254,21 +254,21 @@ class Model(Module):
         super(Model, self).__init__()
 
         # some configurations for the model
-        n_tc_timesteps = config.cfg.MODEL.N_TC_TIMESTEPS
-        backbone_name = config.cfg.MODEL.BACKBONE_CNN
-        feature_name = config.cfg.MODEL.BACKBONE_FEATURE
-        n_tc_layers = config.cfg.MODEL.N_TC_LAYERS
-        n_classes = config.cfg.MODEL.N_CLASSES
-        is_dilated = config.cfg.MODEL.MULTISCALE_TYPE
+        n_tc_timesteps = config.cfg.MODEL.N_TC_TIMESTEPS #32
+        backbone_name = config.cfg.MODEL.BACKBONE_CNN #'i3d_pytorch_charades_rgb'
+        feature_name = config.cfg.MODEL.BACKBONE_FEATURE #'mixed_5c'
+        n_tc_layers = config.cfg.MODEL.N_TC_LAYERS #2
+        n_classes = config.cfg.MODEL.N_CLASSES #157
+        is_dilated = config.cfg.MODEL.MULTISCALE_TYPE #采用的多核策略类型'ks'
         OutputActivation = Sigmoid if config.cfg.MODEL.CLASSIFICATION_TYPE == 'ml' else LogSoftmax
-        n_channels_in, channel_h, channel_w = utils.get_model_feat_maps_info(backbone_name, feature_name)
-        n_groups = int(n_channels_in / 128.0)
+        n_channels_in, channel_h, channel_w = utils.get_model_feat_maps_info(backbone_name, feature_name) #1024, 7, 7
+        n_groups = int(n_channels_in / 128.0) #8
 
-        input_shape = (None, n_channels_in, n_tc_timesteps, channel_h, channel_w)  # (C, T, H, W)
-        self._input_shape = input_shape
+        input_shape = (None, n_channels_in, n_tc_timesteps, channel_h, channel_w)  # (None, C, T, H, W),(None, 1024, 32, 7, 7)其中T是自己设定的
+        self._input_shape = input_shape #(None, 1024, 32, 7, 7)
 
         # define 4 layers of timeception
-        self.timeception = timeception_pytorch.Timeception(input_shape, n_tc_layers, n_groups, is_dilated)  # (C, T, H, W)
+        self.timeception = timeception_pytorch.Timeception(input_shape, n_tc_layers, n_groups, is_dilated)
 
         # get number of output channels after timeception
         n_channels_in = self.timeception.n_channels_out
@@ -309,15 +309,14 @@ def __main():
     Run this script to train Timeception.
     """
 
-    # default_config_file = 'charades_i3d_tc4_f1024.yaml'
-    default_config_file = 'charades_i3d_tc3_f256.yaml'
+    default_config_file = 'charades_i3d_tc2_f256.yaml' #网络的配置文件,2层的tc
     # Parse the arguments
     parser = OptionParser() #创建OptionParser对象，用于设置参数配置文件
     #使用parser.add_option(...)待定义命令行参数，及其帮助文档
     parser.add_option('-c', '--config_file', dest='config_file', default=default_config_file, help='Yaml config file that contains all training details.')
-    #options 是一个字典，其key字典中的关键字可能会是是我们所有的add_option()函数中的dest参数值，其对应的value值，是命令行输入的对应的add_option()函数的参数值。
-    #args,它是一个由 positional arguments 组成的列表。
     (options, args) = parser.parse_args() #option: {'config_file': 'charades_i3d_tc2_f256.yaml'},args: []
+    #options 是一个字典，其key字典中的关键字可能会是我们所有的add_option()函数中的dest参数值，其对应的value值，是命令行输入的对应的add_option()函数的参数值。
+    #args,它是一个由 positional arguments 组成的列表。
     config_file = options.config_file #'charades_i3d_tc2_f256.yaml'
 
     # check if exist,不存在进行警告
@@ -335,7 +334,7 @@ def __main():
         logging.error(msg)
 
     else:
-        # read the config from file and copy it to the project configuration "cfg"
+        # read the config from file and copy it to the project configuration "cfg"，从文件中读取配置并将其复制到项目配置“config。py”中
         config_utils.cfg_from_file(config_path)
 
         # choose which training scheme, either 'ete' or 'tco'

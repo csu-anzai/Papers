@@ -46,7 +46,7 @@ class RandomCrop(object):
         return self.__class__.__name__ + '(size={0})'.format(self.size)
 
 class CenterCrop(object):
-    """Crops the given seq Images at the center.
+    """Crops the given seq Images at the center.做中心裁剪
     Args:
         size (sequence or int): Desired output size of the crop. If size is an
             int instead of sequence like (h, w), a square crop (size, size) is

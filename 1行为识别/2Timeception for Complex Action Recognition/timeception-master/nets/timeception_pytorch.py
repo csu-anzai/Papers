@@ -51,9 +51,9 @@ class Timeception(Module):
 
     def __init__(self, input_shape, n_layers=4, n_groups=8, is_dilated=True):
         '''
-
+         self.timeception = timeception_pytorch.Timeception(input_shape, n_tc_layers, n_groups, is_dilated)
         :param input_shape: (32, 1024, 128, 7, 7)
-        :param n_layers: 4
+        :param n_layers: 2
         :param n_groups: 8
         :param is_dilated: True
         '''
@@ -66,7 +66,7 @@ class Timeception(Module):
 
         expansion_factor = 1.25
         self.expansion_factor = expansion_factor
-        self.n_layers = n_layers
+        self.n_layers = n_layers #2
         self.is_dilated = is_dilated
         self.n_groups = n_groups
         self.n_channels_out = None
@@ -83,7 +83,7 @@ class Timeception(Module):
 
     def forward(self, input):
 
-        n_layers = self.n_layers #4
+        n_layers = self.n_layers #2
         n_groups = self.n_groups #8
         expansion_factor = self.expansion_factor #1.25
 
@@ -95,7 +95,7 @@ class Timeception(Module):
         '''
         Define layers inside the timeception layers. 定义timeception层的内部操作结构
         :param input_shape: (32, 1024, 128, 7, 7)：1024输入的通道数
-        :param n_layers: 4
+        :param n_layers: 2
         :param n_groups: 8
         :param expansion_factor: 1.25
         :param is_dilated: True
@@ -120,8 +120,8 @@ class Timeception(Module):
             layer._name = layer_name
             setattr(self, layer_name, layer)
 
-            n_channels_in = n_channels_out #[1280, 1600, 2000, 2480]
-            input_shape[1] = n_channels_in
+            n_channels_in = n_channels_out
+            input_shape[1] = n_channels_in #下一层输入时的通道个数[1280, 1600, 2000, 2480]
 
         return n_channels_in
 
@@ -277,6 +277,7 @@ class Timeception(Module):
         setattr(self, layer_name, layer)
 
     def __call_timeception_layers(self, tensor, n_layers, n_groups, expansion_factor):
+        # output = self.__call_timeception_layers(input, n_layers, n_groups, expansion_factor)
         input_shape = tensor.size() #原始的输入
         n_channels_in = input_shape[1]
 

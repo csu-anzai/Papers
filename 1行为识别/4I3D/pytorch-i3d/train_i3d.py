@@ -52,14 +52,14 @@ def run(init_lr=0.1, max_steps=64e3, mode='rgb', root='/ssd/Charades_v1_rgb', tr
     # setup the model
     if mode == 'flow':
         i3d = InceptionI3d(400, in_channels=2)
-        i3d.load_state_dict(torch.load('models/flow_imagenet.pt'))
+        i3d.load_state_dict(torch.load('models/flow_charades.pt')) #加载flow模型的参数
     else:
         i3d = InceptionI3d(400, in_channels=3)
-        i3d.load_state_dict(torch.load('models/rgb_imagenet.pt'))
+        i3d.load_state_dict(torch.load('models/rgb_charades.pt')) #加载rgb模型的参数
     i3d.replace_logits(157)
     #i3d.load_state_dict(torch.load('/ssd/models/000920.pt'))
     i3d.cuda()
-    i3d = nn.DataParallel(i3d)
+    i3d = nn.DataParallel(i3d) #使用多GPU
 
     lr = init_lr
     optimizer = optim.SGD(i3d.parameters(), lr=lr, momentum=0.9, weight_decay=0.0000001)

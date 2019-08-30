@@ -52,20 +52,12 @@ from core import const
 
 logger = logging.getLogger(__name__)
 
-class StrToBytes:
-    def __init__(self, fileobj):
-        self.fileobj = fileobj
-    def read(self, size):
-        return self.fileobj.read(size).encode()
-    def readline(self, size=-1):
-        return self.fileobj.readline(size).encode()
-
 # region Load and Dump
-
+# path:./data/charades/annotation/video_annotation.pkl
 def pkl_load(path):
-    with open(path, 'r') as f:
-        data = pkl.load(StrToBytes(f))
-        # data = pkl.load(f)
+    #读取.pkl文件
+    with open(path, 'rb') as f:
+        data = pkl.load(f)
     return data
 
 def txt_load(path):
@@ -86,12 +78,13 @@ def json_load(path):
     return data
 
 def yaml_load(file_path):
+    # file_path: './configs/charades_i3d_tc2_f256.yaml'
     with open(file_path, 'r') as f:
         # print('f',f) #<_io.TextIOWrapper name='./configs/charades_i3d_tc2_f256.yaml' mode='r' encoding='UTF-8'>
-        data = yaml.load(f)
+        data = yaml.load(f, Loader=yaml.FullLoader) #读取出来是字典类型的
         data = AttrDict(data)
 
-    data = convert_dict_to_attrdict(data) #将参数以字典的形式进行存储
+    data = convert_dict_to_attrdict(data) #为内部字典也赋予AttrDict（）的两种方法，感觉用处不大
     # print('data',data) #{'LOG_PERIOD': 10, 'NUM_GPUS': 1, 'TRAIN': {'BATCH_SIZE': 32, 'N_WORKERS': 10, 'SCHEME': 'tco', 'N_EPOCHS': 500}, 'SOLVER': {'NAME': 'adam', 'LR': 0.01, 'SGD_WEIGHT_DECAY': 0.0001, 'ADAM_EPSILON': 0.0001, 'SGD_NESTEROV': True, 'SGD_MOMENTUM': 0.9}, 'DATASET_NAME': 'charades', 'MODEL': {'N_CHAMNNEL_GROUPS': 8, 'N_TC_LAYERS': 2, 'MULTISCALE_TYPE': 'ks', 'BACKBONE_FEATURE': 'mixed_5c', 'N_TC_TIMESTEPS': 32, 'CLASSIFICATION_TYPE': 'ml', 'N_INPUT_TIMESTEPS': 256, 'N_CLASSES': 157, 'BACKBONE_CNN': 'i3d_pytorch_charades_rgb', 'NAME': 'charades_timeception'}, 'TEST': {'N_SAMPLES': 10, 'BATCH_SIZE': 64}}
     return data
 
@@ -122,7 +115,7 @@ def byte_dump(data, path):
         f.write(data)
 
 def pkl_dump(data, path, is_highest=True):
-    with open(path, 'w') as f:
+    with open(path, 'wb') as f:
         if not is_highest:
             pkl.dump(data, f)
         else:
@@ -173,7 +166,7 @@ def file_names(path, is_nat_sort=False):
         exp_msg = 'Sorry, folder path does not exist: %s' % (path)
         raise Exception(exp_msg)
 
-    names = os.walk(path).next()[2]
+    names = os.walk(path).__next__()[2]
 
     if is_nat_sort:
         names = natsort.natsorted(names)
@@ -185,7 +178,7 @@ def file_pathes(path, is_nat_sort=False):
         exp_msg = 'Sorry, folder path does not exist: %s' % (path)
         raise Exception(exp_msg)
 
-    names = os.walk(path).next()[2]
+    names = os.walk(path).__next__()[2]
 
     if is_nat_sort:
         names = natsort.natsorted(names)
@@ -198,7 +191,7 @@ def folder_names(path, is_nat_sort=False):
         exp_msg = 'Sorry, folder path does not exist: %s' % (path)
         raise Exception(exp_msg)
 
-    names = os.walk(path).next()[1]
+    names = os.walk(path).__next__()[1]
 
     if is_nat_sort:
         names = natsort.natsorted(names)
@@ -210,7 +203,7 @@ def folder_pathes(path, is_nat_sort=False):
         exp_msg = 'Sorry, folder path does not exist: %s' % (path)
         raise Exception(exp_msg)
 
-    names = os.walk(path).next()[1]
+    names = os.walk(path).__next__()[1]
 
     if is_nat_sort:
         names = natsort.natsorted(names)
@@ -354,11 +347,20 @@ def print_counter(num, total, freq=None):
         logger.info('... %d/%d' % (num, total))
 
 def calc_num_batches(n_samples, batch_size):
+    '''
+    计算batch的个数
+    :param n_samples:总的样本个数
+    :param batch_size: 采用的batch_size=32
+    :return:返回batch的个数，用n_samples / float(batch_size)向上取整
+    '''
+    #n_batches = utils.calc_num_batches(n_samples, batch_size)
     n_batch = int(n_samples / float(batch_size))
     n_batch = n_batch if n_samples % batch_size == 0 else n_batch + 1
     return n_batch
 
 def convert_dict_to_attrdict(d):
+
+    # data = convert_dict_to_attrdict(data)
     # for k, v in d.iteritems():
     for k, v in d.items():
 
@@ -372,8 +374,9 @@ def convert_dict_to_attrdict(d):
     return d
 
 def get_model_feat_maps_info(model_type, feature_type):
+    #utils.get_model_feat_maps_info(backbone_model_name, backbone_feature_name)
     """
-    Get feature map details according to model type and feature type.
+    Get feature map details according to model type and feature type.根据传入的模型名称和细节得到特征的具体细节
     :param model_type: i3d_pytorch_charades_rgb
     :param feature_type: mixed_5c
     :return:
@@ -462,12 +465,15 @@ class DurationTimer(object):
 class AttrDict(dict):
     """
     Subclass dict and define getter-setter. This behaves as both dict and obj.
+    为字典定义了两种方法，可以
     """
 
     def __getattr__(self, key):
+        #得到配置文件字典中的属性值
         return self[key]
 
     def __setattr__(self, key, value):
+        #修改配置文件字典中的属性值或者添加新的属性即对应的值
         if key in self.__dict__:
             self.__dict__[key] = value
         else:
