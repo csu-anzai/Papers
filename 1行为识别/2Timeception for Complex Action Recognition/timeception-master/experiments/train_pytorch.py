@@ -131,7 +131,7 @@ def train_tco():
 
             loss_tr += loss_b_tr
             acc_tr += acc_b_tr
-            loss_b_tr = loss_tr / float(batch_num)
+            loss_b_tr = loss_tr / float(batch_num) #平均损失
             acc_b_tr = acc_tr / float(batch_num)
             tt2 = time.time()
             duration = tt2 - tt1
