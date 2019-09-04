@@ -84,6 +84,7 @@ class DepthwiseConv1DLayer(Module):
     """
 
     def __init__(self, input_shape, kernel_size, dilation, name):
+        #layer = DepthwiseConv1DLayer(dw_input_shape, kernel_sizes[0], dilation_rates[0], layer_name)
         super(DepthwiseConv1DLayer, self).__init__()
 
         assert len(input_shape) == 5
@@ -108,7 +109,7 @@ class DepthwiseConv1DLayer(Module):
         input_shape = input.size()
         n, c, t, h, w = input_shape
 
-        # transpose and reshape to hide the spatial dimension, only expose the temporal dimension for depthwise conv
+        # transpose and reshape to hide the spatial dimension, only expose the temporal dimension for depthwise conv， 只对时间维度进行卷积操作
         tensor = input.permute(0, 3, 4, 1, 2)  # (None, 7, 7, 1024, 20)
         tensor = tensor.contiguous()
         tensor = tensor.view(-1, c, t)  # (None*7*7, 1024, 20)

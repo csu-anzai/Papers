@@ -61,7 +61,7 @@ class Timeception(Module):
         super(Timeception, self).__init__()
 
         # TODO: Add support for multi-scale using dilation rates
-        # current, for pytorch, we only support multi-scale using kernel sizes，源代码目前只支持多尺度kernel_sizes
+        # current, for pytorch, we only support multi-scale using kernel sizes，源代码目前只支持多尺度kernel_sizes,膨胀卷积这个没有实现
         is_dilated = False
 
         expansion_factor = 1.25
@@ -200,10 +200,10 @@ class Timeception(Module):
         示例：
         layer_name = 'conv_b1_g%d_tc%d' % (1, 1)
         layer_name
-        Out[13]: 'conv_b1_g1_tc1'
+        Out[13]: 'conv_b1_g1_tc1'，表示第1个timeception层的第1个group的第1个branch 
         '''
         # branch 1: dimension reduction only and no temporal conv (kernel-size 1)
-        layer_name = 'conv_b1_g%d_tc%d' % (group_num, layer_num)
+        layer_name = 'conv_b1_g%d_tc%d' % (group_num, layer_num) #不同timeception层的不同group在同一个branch上采用的是同一个操作
         layer = Conv3d(n_channels_in, n_channels_per_branch_out, kernel_size=(1, 1, 1))
         layer._name = layer_name
         setattr(self, layer_name, layer)
@@ -237,9 +237,11 @@ class Timeception(Module):
         layer = Conv3d(n_channels_in, n_channels_per_branch_out, kernel_size=(1, 1, 1))
         layer._name = layer_name
         setattr(self, layer_name, layer)
+
         layer_name = 'convdw_b3_g%d_tc%d' % (group_num, layer_num)
         layer = DepthwiseConv1DLayer(dw_input_shape, kernel_sizes[1], dilation_rates[1], layer_name)
         setattr(self, layer_name, layer)
+
         layer_name = 'bn_b3_g%d_tc%d' % (group_num, layer_num)
         layer = BatchNorm3d(n_channels_per_branch_out)
         layer._name = layer_name
@@ -250,9 +252,11 @@ class Timeception(Module):
         layer = Conv3d(n_channels_in, n_channels_per_branch_out, kernel_size=(1, 1, 1))
         layer._name = layer_name
         setattr(self, layer_name, layer)
+
         layer_name = 'convdw_b4_g%d_tc%d' % (group_num, layer_num)
         layer = DepthwiseConv1DLayer(dw_input_shape, kernel_sizes[2], dilation_rates[2], layer_name)
         setattr(self, layer_name, layer)
+
         layer_name = 'bn_b4_g%d_tc%d' % (group_num, layer_num)
         layer = BatchNorm3d(n_channels_per_branch_out)
         layer._name = layer_name
@@ -263,14 +267,17 @@ class Timeception(Module):
         layer = Conv3d(n_channels_in, n_channels_per_branch_out, kernel_size=(1, 1, 1))
         layer._name = layer_name
         setattr(self, layer_name, layer)
+
         layer_name = 'maxpool_b5_g%d_tc%d' % (group_num, layer_num)
         layer = MaxPool3d(kernel_size=(2, 1, 1), stride=(1, 1, 1))
         layer._name = layer_name
         setattr(self, layer_name, layer)
+
         layer_name = 'padding_b5_g%d_tc%d' % (group_num, layer_num)
         layer = torch.nn.ReplicationPad3d((0, 0, 0, 0, 1, 0))  # left, right, top, bottom, front, back
         layer._name = layer_name
         setattr(self, layer_name, layer)
+
         layer_name = 'bn_b5_g%d_tc%d' % (group_num, layer_num)
         layer = BatchNorm3d(n_channels_per_branch_out)
         layer._name = layer_name
@@ -355,7 +362,7 @@ class Timeception(Module):
         # getattr() 函数用于返回一个对象属性值
         # 'conv_b1_g%d_tc%d' % (1, 1) -->  'conv_b1_g1_tc1'
         # branch 1: dimension reduction only and no temporal conv
-        t_1 = getattr(self, 'conv_b1_g%d_tc%d' % (group_num, layer_num))(tensor) #第group_num组，第layer_num层#
+        t_1 = getattr(self, 'conv_b1_g%d_tc%d' % (group_num, layer_num))(tensor) #第group_num组，第layer_num层
         # getattr()得到对象self的'conv_b1_g%d_tc%d'的属性，得到类似于Conv3d(250, 62, kernel_size=(1, 1, 1), stride=(1, 1, 1))的结果，由上面的setattr()函数设置
         t_1 = getattr(self, 'bn_b1_g%d_tc%d' % (group_num, layer_num))(t_1)
 

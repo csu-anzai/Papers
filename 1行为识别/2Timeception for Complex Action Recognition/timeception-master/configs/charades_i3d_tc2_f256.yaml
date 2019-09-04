@@ -14,7 +14,7 @@ MODEL:
   NAME: 'charades_timeception' # name suffex for the model to be trained
   BACKBONE_CNN: 'i3d_pytorch_charades_rgb'# which backbone cnn is used
   BACKBONE_FEATURE: 'mixed_5c' # type of feature output from backbone cnn
-  MULTISCALE_TYPE: 'dl' # use multi-scale by dilation rate "dl" or multi-scale by kernel-size "ks",初始dl
+  MULTISCALE_TYPE: 'dl' # use multi-scale by dilation rate "dl" or multi-scale by kernel-size "ks",初始dl，实际上这个还没有实现
 
 TRAIN:
   BATCH_SIZE: 16 # batch size for training,原先为32

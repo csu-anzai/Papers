@@ -7,7 +7,37 @@ We provide the implementation for 3 different libraries: `keras`, `tensorflow` a
 
 ![Timeception for Complex Action Recognition](./data/assets/timeception_layer.jpg "Timeception Block")
 
-## 对长期时间依赖性上的解决方案：
+# 预处理
+
+1. 采样：
+
+   对原始视频进行采样，采样的大小`T x Channels x H x W`：
+
+   - $1024*3*224*224$
+   - $512*3*224*224$
+   - $256*3*224*224$
+
+   ![1567320714612](README.assets/1567320714612.png)
+
+2. `I3D`进行特征提取：
+
+   使用`I3D`对采样后的帧视频进行特征提取，特征提取后的大小为：`T x H x W x Channels`：
+
+   - `128 x 7 x 7 x 1024​`
+   - `64 x 7 x 7 x 1024​`
+   - `32 x 7 x 7 x 1024​`
+
+   ![1567321592609](README.assets/1567321592609.png)
+
+3. Timeception：
+
+   以 `32 x 7 x 7 x 1024` 为例：
+
+   -  `32 x 7 x 7 x 1024` + `8` `group` --> `32 x 7 x 7 x 128` ，将这个输入到每个`group` 中；
+   - 接着在每个`branch`中的输入的尺寸是 `32 x 7 x 7 x 128`，然后经过一个卷集核为 `1x1x1`，步长为`1`的单位`conv3d`卷积将`Channels`降到`32`即 `32 x 7 x 7 x 32`；
+   - 总共有`5`个分支，将5个 `branch` 得到的 `feature map` 进行组合的得到 `32 x 7 x 7 x 160`，再将 `8`个 `group` 组合得到 `32 x 7 x 7 x 1280`
+
+# 对长期时间依赖性上的解决方案：
 
 | timeception结构                                   | 解决方案                                                     |
 | ------------------------------------------------- | ------------------------------------------------------------ |
@@ -35,7 +65,7 @@ We provide the implementation for 3 different libraries: `keras`, `tensorflow` a
 
 ![1564643171762](README.assets/1564643171762.png)
 
-### 具体的实习方法：
+## 具体的实习方法：
 
 ![1564670952238](README.assets/1564670952238.png)
 
@@ -46,14 +76,145 @@ We provide the implementation for 3 different libraries: `keras`, `tensorflow` a
 **仅以第一次循环为例,展示每一个branch的输入与输出的过程：**
 
 - **Conv3d：**`kernel_size=(1, 1, 1)`，是为降低通道数量
-
 - **DepthwiseConv1DLayer：**采用的是深度可分离的一维卷积，让输入和输出的`channels`相同，同时只对`n_timesteps`进行卷积，参数量为：`in_channels*kernel_size*out_channels`
+- `input.shape=(batch*channels*T*H*W)`
+
+### `branch 1`：只降低了维度没有时间卷积
+
+```python
+# branch 1: dimension reduction only and no temporal conv (kernel-size 1)
+# 卷积操作
+layer_name = 'conv_b1_g%d_tc%d' % (group_num, layer_num) #不同timeception层的不同group（组）在同一个branch（分支）上采用的是同一个操作
+layer = Conv3d(n_channels_in, n_channels_per_branch_out, kernel_size=(1, 1, 1)) #n_channels_in = input.shape[1]/group_num, n_channels_per_branch_out为每个分支的输出的通道个数
+layer._name = layer_name
+setattr(self, layer_name, layer)
+# BN操作
+layer_name = 'bn_b1_g%d_tc%d' % (group_num, layer_num)
+layer = BatchNorm3d(n_channels_per_branch_out)
+layer._name = layer_name
+setattr(self, layer_name, layer)
+```
+
+- 执行操作：
+
+  ```python
+  # branch 1: dimension reduction only and no temporal conv
+  t_1 = getattr(self, 'conv_b1_g%d_tc%d' % (group_num, layer_num))(tensor) #第group_num组，第layer_num层，getattr()得到对象self的'conv_b1_g%d_tc%d'的属性，得到类似于Conv3d(250, 62, kernel_size=(1, 1, 1), stride=(1, 1, 1))的结果，由上面的setattr()函数设置
+  t_1 = getattr(self, 'bn_b1_g%d_tc%d' % (group_num, layer_num))(t_1)
+  ```
+
+### `branch 2`:
+
+```python
+# branch 2: dimension reduction followed by depth-wise temp conv (kernel-size 3)
+# 缩减通道
+layer_name = 'conv_b2_g%d_tc%d' % (group_num, layer_num)
+layer = Conv3d(n_channels_in, n_channels_per_branch_out, kernel_size=(1, 1, 1))# layer = Conv3d(n_channels_in = 128, n_channels_per_branch_out = 32, kernel_size=(1, 1, 1))
+layer._name = layer_name
+setattr(self, layer_name, layer)
+#卷积
+layer_name = 'convdw_b2_g%d_tc%d' % (group_num, layer_num)
+layer = DepthwiseConv1DLayer(dw_input_shape, kernel_sizes[0], dilation_rates[0], layer_name)# layer = DepthwiseConv1DLayer(dw_input_shape=(32, 32, 128, 7, 7) , kernel_sizes[0], dilation_rates[0], layer_name)
+setattr(self, layer_name, layer)
+#BN操作
+layer_name = 'bn_b2_g%d_tc%d' % (group_num, layer_num)
+layer = BatchNorm3d(n_channels_per_branch_out)
+layer._name = layer_name
+setattr(self, layer_name, layer)
+```
+
+```python
+# branch 2: dimension reduction followed by depth-wise temp conv (kernel-size 3)
+t_2 = getattr(self, 'conv_b2_g%d_tc%d' % (group_num, layer_num))(tensor)
+t_2 = getattr(self, 'convdw_b2_g%d_tc%d' % (group_num, layer_num))(t_2)
+t_2 = getattr(self, 'bn_b2_g%d_tc%d' % (group_num, layer_num))(t_2)
+```
+
+### branch 3
+
+```python
+# branch 3: dimension reduction followed by depth-wise temp conv (kernel-size 5)
+layer_name = 'conv_b3_g%d_tc%d' % (group_num, layer_num)
+layer = Conv3d(n_channels_in, n_channels_per_branch_out, kernel_size=(1, 1, 1))
+layer._name = layer_name
+setattr(self, layer_name, layer)
+
+layer_name = 'convdw_b3_g%d_tc%d' % (group_num, layer_num)
+layer = DepthwiseConv1DLayer(dw_input_shape, kernel_sizes[1], dilation_rates[1], layer_name)
+setattr(self, layer_name, layer)
+
+layer_name = 'bn_b3_g%d_tc%d' % (group_num, layer_num)
+layer = BatchNorm3d(n_channels_per_branch_out)
+layer._name = layer_name
+setattr(self, layer_name, layer)
+```
+
+```python
+# branch 3: dimension reduction followed by depth-wise temp conv (kernel-size 5)
+t_3 = getattr(self, 'conv_b3_g%d_tc%d' % (group_num, layer_num))(tensor)
+t_3 = getattr(self, 'convdw_b3_g%d_tc%d' % (group_num, layer_num))(t_3)
+t_3 = getattr(self, 'bn_b3_g%d_tc%d' % (group_num, layer_num))(t_3)
+```
+
+### branch 4
+
+```python
+# branch 4: dimension reduction followed by depth-wise temp conv (kernel-size 7)
+layer_name = 'conv_b4_g%d_tc%d' % (group_num, layer_num)
+layer = Conv3d(n_channels_in, n_channels_per_branch_out, kernel_size=(1, 1, 1))
+layer._name = layer_name
+setattr(self, layer_name, layer)
+
+layer_name = 'convdw_b4_g%d_tc%d' % (group_num, layer_num)
+layer = DepthwiseConv1DLayer(dw_input_shape, kernel_sizes[2], dilation_rates[2], layer_name)
+setattr(self, layer_name, layer)
+
+layer_name = 'bn_b4_g%d_tc%d' % (group_num, layer_num)
+layer = BatchNorm3d(n_channels_per_branch_out)
+layer._name = layer_name
+setattr(self, layer_name, layer)
+```
+
+### branch 5
+
+```python
+# branch 5: dimension reduction followed by temporal max pooling
+layer_name = 'conv_b5_g%d_tc%d' % (group_num, layer_num)
+layer = Conv3d(n_channels_in, n_channels_per_branch_out, kernel_size=(1, 1, 1))
+layer._name = layer_name
+setattr(self, layer_name, layer)
+
+layer_name = 'maxpool_b5_g%d_tc%d' % (group_num, layer_num)
+layer = MaxPool3d(kernel_size=(2, 1, 1), stride=(1, 1, 1))
+layer._name = layer_name
+setattr(self, layer_name, layer)
+
+layer_name = 'padding_b5_g%d_tc%d' % (group_num, layer_num)
+layer = torch.nn.ReplicationPad3d((0, 0, 0, 0, 1, 0))  # left, right, top, bottom, front, back
+layer._name = layer_name
+setattr(self, layer_name, layer)
+
+layer_name = 'bn_b5_g%d_tc%d' % (group_num, layer_num)
+layer = BatchNorm3d(n_channels_per_branch_out)
+layer._name = layer_name
+setattr(self, layer_name, layer)
+```
+
+```python
+# branch 5: dimension reduction followed by temporal max pooling
+t_5 = getattr(self, 'conv_b5_g%d_tc%d' % (group_num, layer_num))(tensor)
+t_5 = getattr(self, 'maxpool_b5_g%d_tc%d' % (group_num, layer_num))(t_5)
+t_5 = getattr(self, 'padding_b5_g%d_tc%d' % (group_num, layer_num))(t_5)
+t_5 = getattr(self, 'bn_b5_g%d_tc%d' % (group_num, layer_num))(t_5)
+```
+
+
 
 | branch | is_dilated                                                   | no_dilated                                                   |
 | ------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | 1      | channels_in=128, channels_out=32, process:Conv3d==>BN,  kernel_size=(1,1,1) | channels_in=128, channels_out=32, process:Conv3d==>BN,  <br>kernel_size=(1,1,1) |
 | 2      | channels_in=32,==>128==> channels_out=32, process: Conv3d==>DepthwiseConv1DLayer==>BN, kernel_size=3, dilation_rates=1 | channels_in=128,==>32==> channels_out=32, <br/>process: Conv3d==>DepthwiseConv1DLayer==<br/>>BN, kernel_size=3, dilation_rates=1 |
-| 3      | channels_in=32,==>128==> channels_out=32, process: Conv3d==>DepthwiseConv1DLayer==>BN, kernel_size=3, dilation_rates=2 | channels_in=128,==>32==> channels_out=32, <br/>process: Conv3d==>DepthwiseConv1DLayer<br/>==>BN, kernel_size=5, dilation_rates=1 |
+| 3·     | channels_in=32,==>128==> channels_out=32, process: Conv3d==>DepthwiseConv1DLayer==>BN, kernel_size=3, dilation_rates=2 | channels_in=128,==>32==> channels_out=32, <br/>process: Conv3d==>DepthwiseConv1DLayer<br/>==>BN, kernel_size=5, dilation_rates=1 |
 | 4      | channels_in=32,==>128==> channels_out=32, process: Conv3d==>DepthwiseConv1DLayer==>BN, kernel_size=3, dilation_rates=3 | channels_in=128,==>32==> channels_out=32, <br/>process: Conv3d==>DepthwiseConv1DLayer<br/>==>BN, kernel_size=7, dilation_rates=1 |
 | 5      | channels_in=32,==>128==> channels_out=32, process: Conv3d==>DepthwiseConv1DLayer==>BN, kernel_size=3, dilation_rates=3 | channels_in=128, channels_out=32, process: Conv3d==>MaxPool3d====><br/>torch.nn.ReplicationPad3d==>BN |
 
@@ -151,79 +312,9 @@ print (tensor.size())
 - `charades_i3d_tc3_f512.yaml`
 - `charades_i3d_tc4_f1024.yaml`
 
+## 模型的输入输出变化
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+![1567171755816](README.assets/1567171755816.png)
 
 
 
@@ -242,9 +333,9 @@ Please consider citing this work using this BibTeX entry
 }
 ```
 
-## How to Use?
+# How to Use?
 
-### Keras
+## Keras
 
 Using `keras`, we can define `timeception` as a sub-model.
 Then we use it along with another model definition.
@@ -281,7 +372,7 @@ Layer (type)  Output Shape              Param #
 Total params: 1,742,404
 ```
 
-### Tensorflow
+## Tensorflow
 
 Using `tensorflow`, we can define `timeception` as a list of nodes in the computational graph.
 Then we use it along with another model definition.
@@ -302,7 +393,7 @@ tensor = timeception.timeception_layers(input, n_layers=4)
 print (tensor.get_shape())
 ```
 
-### PyTorch
+## PyTorch
 
 - PyTorch 1.0.1
 
